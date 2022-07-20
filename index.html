@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <style>
+    .rect {
+      height: 200px;
+      background-color: red;
+      transition: width .2s;
+      will-change: width;
+    }
+  </style>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div id="app">
+    <div class="block" data-controller="Active">
+      <!-- 123 -->
+      <div class="count" data-index="{{index}}">
+        {{count}}
+      </div>
+      <div class="rect" style="width:{{width}}px;"></div>
+      <div>
+        <button data-action="click->inc">+1</button>
+      </div>
+    </div>
+    <div class="block" data-controller="Active">
+      <!-- 123 -->
+      <div class="count" data-index="{{index}}">
+        {{count}}
+      </div>
+      <div class="rect" style="width:{{width}}px;"></div>
+      <div>
+        <button data-action="click->inc">+1</button>
+      </div>
+    </div>
+  </div>
+  <script src="./index.js" type="module"></script>
+</body>
+
+</html>
