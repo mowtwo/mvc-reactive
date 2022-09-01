@@ -3,6 +3,9 @@ export class Controller {
   #effectMap = new WeakMap()
   #reactive
   #$reactive
+  /**
+   * @param {Record<string,any>} reactive
+   */
   constructor(reactive = {}) {
     this.#reactive = Object.fromEntries(Object.entries(reactive).map((entry) => {
       entry[1] = {
@@ -64,7 +67,7 @@ export class Controller {
   }
 }
 
-export function parsetDataAction(n, c, action) {
+function parsetDataAction(n, c, action) {
   if (Reflect.get(n, '$$parsetDataAction')) {
     return
   } else {
@@ -111,7 +114,7 @@ export function parseAttribute(n, c, map) {
   return map
 }
 
-export function parseText(n, c, map) {
+function parseText(n, c, map) {
   if (Reflect.get(n, '$$parseText')) {
     return map
   } else {
@@ -134,7 +137,7 @@ export function parseText(n, c, map) {
   }
 }
 
-export function parseNode(n, c, map) {
+function parseNode(n, c, map) {
   if (Reflect.get(n, '$$parseNode')) {
     return map
   } else {
@@ -148,7 +151,7 @@ export function parseNode(n, c, map) {
   return map
 }
 
-export function parseRoot(target, c, updateMap = new Map()) {
+function parseRoot(target, c, updateMap = new Map()) {
   if (Reflect.get(target, '$$parseRoot')) {
     return updateMap
   } else {
@@ -161,7 +164,7 @@ export function parseRoot(target, c, updateMap = new Map()) {
   return updateMap
 }
 
-export function update(map, c) {
+function update(map, c) {
   for (const item of map.entries()) {
     const [target, templates] = item
     for (const temp of templates) {
@@ -190,10 +193,22 @@ export function update(map, c) {
 }
 
 /**
- * @param {Controller[]} classes
+ * @param {Array<new()=>Controller>} controllers
  */
 export function setup(controllers) {
-  const ControllersMap = Object.fromEntries(controllers.map(c => {
+  if (!Array.isArray(controllers)) {
+    throw new TypeError('controllers 必须是数组')
+  }
+  const ControllersMap = Object.fromEntries(controllers.filter(c => {
+    if (typeof c !== 'function' || !Object.is(Reflect.getPrototypeOf(c.prototype), Controller.prototype)) {
+      console.warn('过滤了非Controller子类')
+      return false
+    }
+    return true
+  }).map(c => {
+    if (!/.+Controller$/.test(c.name)) {
+      return [`${c.name}Controller`, c]
+    }
     return [c.name, c]
   }))
   const controllerTargets = [...document.querySelectorAll('[data-controller]')]
