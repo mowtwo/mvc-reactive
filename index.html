@@ -9,6 +9,7 @@
       transition: width .2s;
       will-change: width;
     }
+
   </style>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -23,17 +24,17 @@
       <div class="count" data-index="{{index}}">
         {{count}}
       </div>
-      <div class="rect" style="width:{{width}}px;"></div>
+      <div class="rect" :style="width:{{width}}px;"></div>
       <div>
         <button data-action="click->inc">+1</button>
       </div>
     </div>
     <div class="block" data-controller="Active">
       <!-- 123 -->
-      <div class="count" data-index="{{index}}">
+      <div class="count" :data-index="{{index}}">
         {{count}}
       </div>
-      <div class="rect" style="width:{{width}}px;"></div>
+      <div class="rect" style="height: 300px;" :style="width:{{width}}px;"></div>
       <div>
         <button data-action="click->inc">+1</button>
       </div>

@@ -79,7 +79,7 @@ function parsetDataAction(n, c, action) {
     if (actionName && methodName) {
       if (typeof c[methodName] === 'function') {
         const m = c[methodName].bind(c)
-        n.addEventListener(actionName, m)
+        n.addEventListener(actionName, e => m.call(n, e, n?.dataset ?? {}))
       }
     }
   }
@@ -97,16 +97,19 @@ export function parseAttribute(n, c, map) {
     for (const name of attrNames) {
       if (name === 'data-action') {
         parsetDataAction(n, c, n.getAttribute('data-action'))
+        n.removeAttribute(name)
         return map
       }
-      if (tempRegex.test(n.getAttribute(name))) {
+      if (name.indexOf(':') === 0 && tempRegex.test(n.getAttribute(name))) {
         const set = map.get(n) ?? new Set()
         map.set(n, set)
+        const notBindName = name.slice(1)
         set.add({
           type: 'attr',
-          key: name,
-          value: n.getAttribute(name)
+          key: notBindName,
+          value: `${n.getAttribute(notBindName) ?? ''}` + n.getAttribute(name)
         })
+        n.removeAttribute(name)
       }
     }
   }

@@ -9,8 +9,11 @@ class ActiveController extends Controller {
   constructor(reactive) {
     super(reactive)
   }
-  inc() {
+  inc(e, dataset) {
+    console.log(dataset)
+    console.log('inc')
     this.setState('count', this.getState('count') + 1)
+    this.setState('index', this.getState('index') + 1)
     this.setState('width', this.getState('width') + 10)
   }
 }
