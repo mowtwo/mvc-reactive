@@ -70,11 +70,14 @@ export function parsetDataAction(n, c, action) {
   } else {
     Reflect.set(n, '$$parsetDataAction', true)
   }
-  const [actionName, methodName] = action.split('->')
-  if (actionName && methodName) {
-    if (typeof c[methodName] === 'function') {
-      const m = c[methodName].bind(c)
-      n.addEventListener(actionName, m)
+  const actions = action.split(',')
+  for (const action of actions) {
+    const [actionName, methodName] = action.split('->')
+    if (actionName && methodName) {
+      if (typeof c[methodName] === 'function') {
+        const m = c[methodName].bind(c)
+        n.addEventListener(actionName, m)
+      }
     }
   }
 }
@@ -187,7 +190,7 @@ export function update(map, c) {
 }
 
 /**
- * @param {Controller[]} classes 
+ * @param {Controller[]} classes
  */
 export function setup(controllers) {
   const ControllersMap = Object.fromEntries(controllers.map(c => {
